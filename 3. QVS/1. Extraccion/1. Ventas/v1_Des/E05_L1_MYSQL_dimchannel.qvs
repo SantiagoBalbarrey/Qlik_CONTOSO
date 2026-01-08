@@ -1,0 +1,24 @@
+//---------------------------------------
+
+SET vS.TableName 	= Dim_Channels;
+SET vS.QVDFileName 	= L1_MYSQL_DIM_Channels;
+SET vS.PathFile 	= $(vQVDExtVtas);  
+
+//---------------------------------------
+
+
+$(vS.TableName):
+  LOAD 
+    ChannelKey, 
+    ChannelLabel, 
+    ChannelName, 
+    ChannelDescription, 
+    ETLLoadID, 
+    LoadDate, 
+    UpdateDate;
+  SELECT 
+      *
+  FROM spanish.dimchannel;
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

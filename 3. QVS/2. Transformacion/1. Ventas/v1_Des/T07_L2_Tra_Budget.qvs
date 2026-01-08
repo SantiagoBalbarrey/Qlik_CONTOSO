@@ -1,0 +1,50 @@
+//---------------------------------------
+
+SET vS.TableName 	= Budget;
+SET vS.QVDFileName 	= L2_Tra_Budget;
+SET vS.PathFile 	= $(vQVDTraVtas);  
+
+//---------------------------------------
+
+Tbl_Tmp1:
+CrossTable(DateKey,Budget,3) 
+    LOAD
+        *
+    FROM [$(vQVDExtVtas)/L1_EXCEL_TRA_Budget.qvd] (qvd);
+
+
+Tbl_Tmp2:
+NOCONCATENATE 
+    LOAD
+        NUM#(DateKey) AS DateKey,
+        ChannelKey,
+        StoreKey,
+        ProductKey,
+        Budget AS Budget_EUR
+    RESIDENT Tbl_Tmp1
+    WHERE Budget <> 0;
+    DROP TABLE Tbl_Tmp1;
+LEFT JOIN (Tbl_Tmp2)
+    LOAD
+        NUM(MonthStart(DateKey)) AS DateKey,
+        AVG(AverageRate)         AS AverageRate
+    FROM [$(vQVDExtVtas)/L1_MYSQL_TRA_Exchange_Rate.qvd] (qvd) 
+    WHERE CurrencyKey = 1
+    GROUP BY 
+        NUM(MonthStart(DateKey));
+        
+$(vS.TableName):
+NOCONCATENATE
+   LOAD 
+        DateKey,
+        ChannelKey,
+        StoreKey,
+        ProductKey,
+        AverageRate,
+        Budget_EUR,
+        Budget_EUR * AverageRate AS Budget_USD
+   RESIDENT Tbl_Tmp2; 
+   DROP TABLE Tbl_Tmp2;
+   
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

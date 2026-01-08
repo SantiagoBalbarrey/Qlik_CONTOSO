@@ -1,0 +1,9 @@
+vSet01_Calendario = =$(=Chr(39) & '[' & Concat( {<[$Table]={'Calendar_Master'}>} distinct [$Field],'],[') & ']' & Chr(39))
+vSet02_PeriodoAnalisis = $(=Chr(39)&'$(vSet01_Calendario)' &If('$1' ='PTD' , ',[Period_Num] = {$(=floor(monthstart(addmonths(max(Period_Num),$2))))}',If('$1' ='YTD' , ',[Month_Num] = {"<=$(=max([Month_Num]))"},[Year]={$(=max([Year])+$2)}',If('$1' ='MAT' , ',[Period_Num] = {">=$(=Num(AddMonths($(=Max(Period_Num)), $2))) <=$(=Max(Period_Num))"}','')))&Chr(39) )
+vTipo_Moneda = EUR
+vExp_MontoVentas = {<$(=$(vSet02_PeriodoAnalisis($1,$2)))>} Sum(SalesAmount_$(vTipo_Moneda))
+vExp_MargenBruto = {<$(=$(vSet02_PeriodoAnalisis($1,$2)))>} Sum(GrossMargin_$(vTipo_Moneda))
+vExp_MargenNeto = {<$(=$(vSet02_PeriodoAnalisis($1,$2)))>} Sum(NetMargin_$(vTipo_Moneda))
+vExp_Cantidades = {<$(=$(vSet02_PeriodoAnalisis($1,$2)))>} Sum(SalesQuantity)
+vExp_ETQ_periodo = '$1'&' '&date($(=floor(monthstart(addmonths(max(Period_Num),$2)))),'MMM-YY')
+vExp_ETQ_anios = '$1'&' '&'$(=max([Year])+$2)'

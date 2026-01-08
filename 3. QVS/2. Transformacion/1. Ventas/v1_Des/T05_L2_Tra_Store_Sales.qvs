@@ -1,0 +1,48 @@
+//---------------------------------------
+
+SET vS.TableName 	= Store_Sales;
+SET vS.QVDFileName 	= L2_Tra_Store_Sales;
+SET vS.PathFile 	= $(vQVDTraVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+    LOAD 
+       *,
+       GrossMargin - DiscountAmount as NetMargin;
+    LOAD
+       *,
+       SalesAmount - TotalCost - ReturnAmount as GrossMargin;
+    LOAD
+        // Dimensiones
+        //     SalesKey,
+        num(MonthStart(DateKey)) as  DateKey,
+        channelKey,
+        StoreKey,
+        ProductKey,
+        PromotionKey,
+        CurrencyKey,
+        UnitCost,
+        UnitPrice,
+
+        // Metricas
+          sum(SalesQuantity) 	as SalesQuantity,
+          sum(SalesAmount) 		as SalesAmount,
+          sum(ReturnQuantity) 	as ReturnQuantity,
+          sum(ReturnAmount) 	as ReturnAmount,
+          sum(DiscountQuantity) as DiscountQuantity,
+          sum(DiscountAmount) 	as DiscountAmount,
+          sum(TotalCost) 		as TotalCost
+    FROM [$(vQVDExtVtas)/L1_MYSQL_TRA_Sales_Store.qvd] (qvd)
+    GROUP BY
+            num(MonthStart(DateKey)),
+            channelKey,
+            StoreKey,
+            ProductKey,
+            PromotionKey,
+            CurrencyKey,
+            UnitCost,
+            UnitPrice;
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

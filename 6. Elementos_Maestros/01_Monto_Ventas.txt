@@ -1,0 +1,42 @@
+------------------------------
+Campo: SalesAmount
+------------------------------
+Nombre:
+A1 - MontoVentasPTD(0) // Mes Actual
+A1 - MontoVentasPTD(-1) // Mes Anterior
+A1 - MontoVentasPTD(-12) // Mes Actual Año Anterior
+
+Expresión:
+$(vExp_MontoVentas(PTD,0))
+$(vExp_MontoVentas(PTD,-1))
+$(vExp_MontoVentas(PTD,-12))
+
+Etiquetas:
+$(vExp_ETQ_periodo(Ventas,0))
+$(vExp_ETQ_periodo(vs,-1))
+$(vExp_ETQ_periodo(vs,-12))
+
+-----------------------------
+Nombre:
+A2 - MontoVentasYTD(0) // Año Actual
+A2 - MontoVentasYTD(-1) // Año Anterior
+
+Expresión:
+$(vExp_MontoVentas(YTD,0))
+$(vExp_MontoVentas(YTD,-1))
+
+Etiquetas:
+$(vExp_ETQ_anios(Ventas,0))
+$(vExp_ETQ_anios(vs,-1))
+
+-----------------------------
+Nombre:
+A3 - MontoVentasMAT(-11)
+
+Expresión:
+$(vExp_MontoVentas(MAT,-11))
+
+Etiquetas:
+$(vExp_ETQ_periodo(Acum.,0))
+
+-----------------------------

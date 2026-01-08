@@ -1,0 +1,7 @@
+vRoot = lib://Dropbox/01_Proyecto Qlik Sense
+vQVDTraVtas = lib://Dropbox/01_Proyecto Qlik Sense/2. QVDs/2. Transformacion/1. Ventas/v1_Des
+vQVD = lib://Dropbox/01_Proyecto Qlik Sense/2. QVDs
+vQVDExt = lib://Dropbox/01_Proyecto Qlik Sense/2. QVDs/1. Extraccion
+vQVDExtVtas = lib://Dropbox/01_Proyecto Qlik Sense/2. QVDs/1. Extraccion/1. Ventas/v1_Des
+vQVDTra = lib://Dropbox/01_Proyecto Qlik Sense/2. QVDs/2. Transformacion
+vVersion = v1_Des

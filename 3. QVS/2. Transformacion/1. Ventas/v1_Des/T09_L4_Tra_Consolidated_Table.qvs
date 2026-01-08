@@ -1,0 +1,53 @@
+//---------------------------------------
+
+SET vS.TableName 	= Tra_Consolidated_Table;
+SET vS.QVDFileName 	= L4_Tra_Consolidated_Table;
+SET vS.PathFile 	= $(vQVDTraVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+    LOAD
+        Flg_Type_Transaction,
+        DateKey,
+        StoreKey,
+        ProductKey,
+        PromotionKey,
+        CurrencyKey,
+        CustomerKey,
+        ChannelKey,
+        SalesQuantity,
+        ReturnQuantity,
+        DiscountQuantity,
+        UnitCost_EUR,
+        UnitPrice_EUR,
+        SalesAmount_EUR,
+        ReturnAmount_EUR,
+        DiscountAmount_EUR,
+        TotalCost_EUR,
+        GrossMargin_EUR,
+        NetMargin_EUR,
+        AverageRate,
+        UnitCost_USD,
+        UnitPrice_USD,
+        SalesAmount_USD,
+        ReturnAmount_USD,
+        DiscountAmount_USD,
+        TotalCost_USD,
+        GrossMargin_USD,
+        NetMargin_USD
+    FROM [$(vQVDTraVtas)/L3_Tra_Consolidated_Sales.qvd] (qvd);
+CONCATENATE 
+    LOAD
+        'Budget'  AS  Flg_Type_Transaction,
+        DateKey,
+        ChannelKey,
+        StoreKey,
+        ProductKey,
+        AverageRate,
+        Budget_EUR,
+        Budget_USD
+    FROM [$(vQVDTraVtas)/L2_Tra_Budget.qvd] (qvd);
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

@@ -1,0 +1,22 @@
+//---------------------------------------
+
+SET vS.TableName 	= Tra_Exchange_Rate;
+SET vS.QVDFileName 	= L1_MYSQL_TRA_Exchange_Rate;
+SET vS.PathFile 	= $(vQVDExtVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+    LOAD 
+        ExchangeRateKey,
+        CurrencyKey, 
+        DateKey, 
+        AverageRate, 
+        EndOfDayRate;
+
+    SELECT 
+    *
+    FROM spanish.factexchangerate;
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

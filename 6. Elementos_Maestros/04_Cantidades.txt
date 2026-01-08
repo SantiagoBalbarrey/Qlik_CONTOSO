@@ -1,0 +1,30 @@
+------------------------------
+Campo: SalesQuantity
+------------------------------
+Nombre:
+D1 - CantidadesPTD(0)
+D1 - CantidadesPTD(-1)
+D1 - CantidadesPTD(-12)
+
+Expresión:
+$(vExp_Cantidades(PTD,0))
+$(vExp_Cantidades(PTD,-1))
+$(vExp_Cantidades(PTD,-12))
+
+Etiquetas:
+$(vExp_ETQ_periodo(Cantidades,0))
+$(vExp_ETQ_periodo(vs,-1))
+$(vExp_ETQ_periodo(vs,-12))
+
+------------------------------
+Nombre:
+D2 - CantidadesYTD(0)
+D2 - CantidadesYTD(-1)
+
+Expresión:
+$(vExp_Cantidades(YTD,0))
+$(vExp_Cantidades(YTD,-1))
+
+Etiquetas:
+$(vExp_ETQ_anios(Cantidades,0))
+$(vExp_ETQ_anios(vs,-1))

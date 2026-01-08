@@ -1,0 +1,32 @@
+//---------------------------------------
+
+SET vS.TableName 	= Calendar_Master;
+SET vS.QVDFileName 	= L2_Calendar_Master;
+SET vS.PathFile 	= $(vQVDTraVtas);  
+
+//---------------------------------------
+
+LET vFechaIni = Num(MakeDate(2015,1,1));
+LET vFechaFin = Num(MakeDate(2050,12,31));
+
+
+
+$(vS.TableName):
+    Load
+        *,
+        num(Month) as Month_Num,
+        num(Period) as Period_Num
+        ;
+    Load
+        DateKey,
+        date(DateKey,'DD/MM/YYYY') as Date,
+        year(DateKey) as Year,
+        month(DateKey) as Month,
+        date(MonthStart(DateKey),'YYYYMM') as Period
+        ;
+    Load 
+        $(vFechaIni) + RecNo()-1  as DateKey
+    AutoGenerate $(vFechaFin) - $(vFechaIni);
+    
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

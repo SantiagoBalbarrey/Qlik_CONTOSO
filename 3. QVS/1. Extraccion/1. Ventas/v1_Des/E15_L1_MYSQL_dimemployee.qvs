@@ -1,0 +1,45 @@
+//---------------------------------------
+
+SET vS.TableName 	= Dim_Employees;
+SET vS.QVDFileName 	= L1_MYSQL_DIM_Employees;
+SET vS.PathFile 	= $(vQVDExtVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+    LOAD 
+        EmployeeKey,
+        ParentEmployeeKey, 
+        FirstName, 
+        LastName, 
+        MiddleName, 
+        Title, 
+        HireDate, 
+        BirthDate, 
+        EmailAddress, 
+        Phone, 
+        MaritalStatus, 
+        EmergencyContactName, 
+        EmergencyContactPhone, 
+        SalariedFlag, 
+        Gender, 
+        PayFrequency, 
+        BaseRate, 
+        VacationHours, 
+        CurrentFlag, 
+        SalesPersonFlag, 
+        DepartmentName, 
+        StartDate, 
+        EndDate, 
+        Status, 
+        ImageUrl, 
+        ProfileUrl, 
+        ETLLoadID, 
+        LoadDate, 
+        UpdateDate;
+    SELECT 
+        *
+    FROM spanish.dimemployee;
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

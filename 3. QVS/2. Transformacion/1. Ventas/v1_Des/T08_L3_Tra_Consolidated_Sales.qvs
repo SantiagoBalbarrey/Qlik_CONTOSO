@@ -1,0 +1,115 @@
+//---------------------------------------
+
+SET vS.TableName 	= Tra_Consolidated_Sales;
+SET vS.QVDFileName 	= L3_Tra_Consolidated_Sales;
+SET vS.PathFile 	= $(vQVDTraVtas);  
+
+//---------------------------------------
+
+Tbl_Tmp1:
+    LOAD
+        'Online Sales' AS Flg_Type_Transaction,
+        DateKey,
+        StoreKey,
+        ProductKey,
+        PromotionKey,
+        CurrencyKey,
+        CustomerKey,
+        UnitCost,
+        UnitPrice,
+        SalesQuantity,
+        SalesAmount,
+        ReturnQuantity,
+        ReturnAmount,
+        DiscountQuantity,
+        DiscountAmount,
+        TotalCost,
+        GrossMargin,
+        NetMargin
+    FROM [$(vQVDTraVtas)/L2_Tra_Online_Sales.qvd] (qvd);
+CONCATENATE
+    LOAD
+        'Store Sales' AS Flg_Type_Transaction,
+        DateKey,
+        channelKey,
+        StoreKey,
+        ProductKey,
+        PromotionKey,
+        CurrencyKey,
+        UnitCost,
+        UnitPrice,
+        SalesQuantity,
+        SalesAmount,
+        ReturnQuantity,
+        ReturnAmount,
+        DiscountQuantity,
+        DiscountAmount,
+        TotalCost,
+        GrossMargin,
+        NetMargin
+    FROM [$(vQVDTraVtas)/L2_Tra_Store_Sales.qvd] (qvd);
+
+//***********************************
+
+Map_Exchange_Rate:
+MAPPING
+    LOAD
+        NUM(MonthStart(DateKey)) AS DateKey,
+        AVG(AverageRate)         AS AverageRate
+    FROM [$(vQVDExtVtas)/L1_MYSQL_TRA_Exchange_Rate.qvd] (qvd) 
+    WHERE CurrencyKey = 1
+    GROUP BY 
+        NUM(MonthStart(DateKey));
+
+//******************************************
+
+        
+$(vS.TableName):
+NOCONCATENATE
+    LOAD 
+       *,
+       UnitCost_EUR * AverageRateAjust 			AS UnitCost_USD,
+       UnitPrice_EUR * AverageRateAjust 		AS UnitPrice_USD,
+       SalesAmount_EUR * AverageRateAjust 		AS SalesAmount_USD,
+       ReturnAmount_EUR * AverageRateAjust 		AS ReturnAmount_USD,
+       DiscountAmount_EUR * AverageRateAjust 	AS DiscountAmount_USD,
+       TotalCost_EUR * AverageRateAjust 		AS TotalCost_USD,
+       GrossMargin_EUR * AverageRateAjust 		AS GrossMargin_USD,
+       NetMargin_EUR * AverageRateAjust 		AS NetMargin_USD
+       ;
+
+    LOAD 
+       *,
+       IF(AverageRate = 'N/E', PEEK(AverageRateAjust),AverageRate) AS AverageRateAjust
+       ;
+
+    LOAD 
+        Flg_Type_Transaction,
+        DateKey,
+        StoreKey,
+        ProductKey,
+        PromotionKey,
+        CurrencyKey,
+        CustomerKey,
+        channelKey 					AS ChannelKey,
+        SalesQuantity,
+        ReturnQuantity,
+        DiscountQuantity,
+        APPLYMAP('Map_Exchange_Rate',DateKey,'N/E') 					AS AverageRate,
+        UnitCost 					AS UnitCost_EUR,
+        UnitPrice 					AS UnitPrice_EUR,
+        SalesAmount 				AS SalesAmount_EUR,
+        ReturnAmount 				AS ReturnAmount_EUR,
+        DiscountAmount				AS DiscountAmount_EUR,
+        TotalCost 					AS TotalCost_EUR,
+        GrossMargin 				AS GrossMargin_EUR,
+        NetMargin 					AS NetMargin_EUR 
+     RESIDENT Tbl_Tmp1
+     ORDER BY DateKey ASC;
+     DROP TABLE Tbl_Tmp1;
+
+DROP FIELD AverageRate FROM $(vS.TableName);
+RENAME FIELD AverageRateAjust TO AverageRate;
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

@@ -1,0 +1,16 @@
+//---------------------------------------
+
+SET vS.TableName 	= Tra_Budget;
+SET vS.QVDFileName 	= L1_EXCEL_TRA_Budget;
+SET vS.PathFile 	= $(vQVDExtVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+LOAD
+    *
+FROM [$(vRoot)/1. Datos Externos/1. Ventas/V1_Des/Contoso_-_Budget.xlsx]
+(ooxml, embedded labels, header is 1 lines, table is Budget);
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

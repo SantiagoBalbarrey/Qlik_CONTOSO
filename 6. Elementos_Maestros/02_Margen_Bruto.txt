@@ -1,0 +1,31 @@
+------------------------------
+Campo: MargenBruto
+------------------------------
+Nombre:
+B1 - MargenBrutoPTD(0)
+B1 - MargenBrutoPTD(-1)
+B1 - MargenBrutoPTD(-12)
+
+Expresión:
+
+$(vExp_MargenBruto(PTD,0))
+$(vExp_MargenBruto(PTD,-1))
+$(vExp_MargenBruto(PTD,-12))
+
+Etiquetas:
+$(vExp_ETQ_periodo(Margen Bruto,0))
+$(vExp_ETQ_periodo(vs,-1))
+$(vExp_ETQ_periodo(vs,-12))
+
+------------------------------
+Nombre:
+B2 - MargenBrutoYTD(0)
+B2 - MargenBrutoYTD(-1)
+
+Expresión:
+$(vExp_MargenBruto(YTD,0))
+$(vExp_MargenBruto(YTD,-1))
+
+Etiquetas:
+$(vExp_ETQ_anios(Margen Bruto,0))
+$(vExp_ETQ_anios(vs,-1))

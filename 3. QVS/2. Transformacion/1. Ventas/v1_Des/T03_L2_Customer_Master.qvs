@@ -1,0 +1,87 @@
+//---------------------------------------
+
+SET vS.TableName 	= Customers_Master;
+SET vS.QVDFileName 	= L2_Customer_Master;
+SET vS.PathFile 	= $(vQVDTraVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+    LOAD
+        *,
+        CustomerTemp &' '& LastName as FullName_Customer;
+
+    LOAD
+        CustomerKey,
+        GeographyKey 		AS GeographyKey_Customer,
+        CustomerLabel,
+        Title,
+//        FirstName &' '& LastName AS FullName_Customer,
+        if (isnull(FirstName),CompanyName,FirstName) as CustomerTemp,
+//         MiddleName,
+        LastName,
+        NameStyle,
+        BirthDate,
+        MaritalStatus,
+        Suffix,
+        Gender,
+        EmailAddress,
+        YearlyIncome,
+        TotalChildren,
+        NumberChildrenAtHome,
+        Education,
+        Occupation,
+        HouseOwnerFlag,
+        NumberCarsOwned,
+        AddressLine1 		AS AddressLine1_Customer,
+        AddressLine2 		AS AddressLine2_Customer,
+        Phone,
+        DateFirstPurchase,
+        CustomerType,
+        CompanyName
+//         ETLLoadID,
+//         LoadDate,
+//         UpdateDate
+    FROM [$(vQVDExtVtas)/L1_MYSQL_DIM_Customers.qvd] (qvd);
+LEFT JOIN ($(vS.TableName))    
+    LOAD
+        GeographyKey 		AS GeographyKey_Customer,
+        GeographyTypeKey 	AS GeographyTypeKey_Customer,
+        GeographyType 		AS GeographyType_Customer,
+        ContinentName 		AS ContinentName_Customer,
+        CityName 			AS CityName_Customer,
+        StateProvinceName 	AS StateProvinceName_Customer,
+        RegionCountryName 	AS RegionCountryName_Customer
+//         Geometry,
+//         ETLLoadID,
+//         LoadDate,
+//         UpdateDate
+    FROM [$(vQVDExtVtas)/L1_MYSQL_DIM_Geography.qvd] (qvd);
+LEFT JOIN ($(vS.TableName))
+    LOAD
+        SalesTerritoryKey,
+        GeographyKey 		AS GeographyKey_Customer,
+        SalesTerritoryLabel,
+        SalesTerritoryName,
+        SalesTerritoryRegion,
+        SalesTerritoryCountry,
+        SalesTerritoryGroup,
+        SalesTerritoryLevel,
+        SalesTerritoryManager,
+        StartDate,
+        EndDate,
+        Status 			 	AS Status_Customer 	
+//         ETLLoadID,
+//         LoadDate,
+//         UpdateDate
+    FROM [$(vQVDExtVtas)/L1_MYSQL_DIM_Sales_Territory.qvd] (qvd);
+LEFT JOIN ($(vS.TableName))
+    LOAD
+        CustomerKey,
+        "TAG" 				AS RFM,
+        ACTIVITY 			AS ACTIVITY_RFM,
+        ACTIONABLE_TIP 		AS ACTIONABLE_TIP_RFM
+    FROM [$(vQVDExtVtas)/L1_MYSQL_DIM_RFM.qvd] (qvd);
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);

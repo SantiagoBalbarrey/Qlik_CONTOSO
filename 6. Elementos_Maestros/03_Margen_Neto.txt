@@ -1,0 +1,30 @@
+------------------------------
+Campo: MargenNeto
+------------------------------
+Nombre:
+C1 - MargenNetoPTD(0)
+C1 - MargenNetoPTD(-1)
+C1 - MargenNetoPTD(-12)
+
+Expresión:
+$(vExp_MargenNeto(PTD,0))
+$(vExp_MargenNeto(PTD,-1))
+$(vExp_MargenNeto(PTD,-12))
+
+Etiquetas:
+$(vExp_ETQ_periodo(Margen Neto,0))
+$(vExp_ETQ_periodo(vs,-1))
+$(vExp_ETQ_periodo(vs,-12))
+
+------------------------------
+Nombre:
+C2 - MargenNetoYTD(0)
+C2 - MargenNetoYTD(-1)
+
+Expresión:
+$(vExp_MargenNeto(YTD,0))
+$(vExp_MargenNeto(YTD,-1))
+
+Etiquetas:
+$(vExp_ETQ_anios(Margen Neto,0))
+$(vExp_ETQ_anios(vs,-1))

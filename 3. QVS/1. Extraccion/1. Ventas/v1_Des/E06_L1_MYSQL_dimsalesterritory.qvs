@@ -1,0 +1,31 @@
+//---------------------------------------
+
+SET vS.TableName 	= Dim_Sales_Territory;
+SET vS.QVDFileName 	= L1_MYSQL_DIM_Sales_Territory;
+SET vS.PathFile 	= $(vQVDExtVtas);  
+
+//---------------------------------------
+
+$(vS.TableName):
+    LOAD 
+        SalesTerritoryKey, 
+        GeographyKey, 
+        SalesTerritoryLabel, 
+        SalesTerritoryName, 
+        SalesTerritoryRegion, 
+        SalesTerritoryCountry, 
+        SalesTerritoryGroup, 
+        SalesTerritoryLevel, 
+        SalesTerritoryManager, 
+        StartDate, 
+        EndDate, 
+        Status, 
+        ETLLoadID, 
+        LoadDate, 
+        UpdateDate;
+    SELECT 
+    *
+    FROM spanish.dimsalesterritory;
+
+STORE $(vS.TableName) INTO [$(vS.PathFile)/$(vS.QVDFileName).qvd] (qvd);
+DROP TABLE $(vS.TableName);
