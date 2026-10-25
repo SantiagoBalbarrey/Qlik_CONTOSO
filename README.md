@@ -9,24 +9,19 @@ The goal is to demonstrate how to design a structured, well‑documented data pi
 ## 🧱 Project Structure
 
 ```
-CONTOSO_qlik/
+Qlik_CONTOSO/
 │
-├── 0.Configuration/              
-│
-├── 1.External_Data/              
-│
-├── 2.QVDs/                       
-│
-├── 3.QVS/                
-│
-├── 4.Dashboards/           
-│
-└── 5.Variables/             
-│
-└── 6.Master Items/             
-
-
+├── 0. Configuration/        → global variables
+├── 3. QVS/
+│   ├── 1. Extraccion/       → extraction scripts (MySQL + Excel → QVD)
+│   └── 2. Transformacion/   → transformation scripts (star schema, calendar)
+├── 4. Dashboards/           → screenshots of the final app
+├── 5. Variables/            → chart and back-end variables
+├── 6. Elementos_Maestros/   → master measures (sales, margins, quantities)
+└── 7.Documentation/         → project documentation (PDF)
 ```
+
+Raw data and generated QVDs are not included in the repository because of their size.
 
 
 ---
@@ -77,11 +72,15 @@ The final Qlik Sense application includes:
 
 The layout follows UX best practices for BI dashboards.
 
+<img src="4.%20Dashboards/Dashboard.png" width="800"/>
+
+<img src="4.%20Dashboards/Analisis%20Clientes.png" width="800"/>
+
 ---
 
 ## 🗂 Documentation
 
-The `/7.documentation` folder contains a PDF summarizing:
+The `7.Documentation` folder contains a PDF summarizing:
 
 - The three‑layer architecture  
 - ETL workflow  
